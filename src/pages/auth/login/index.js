@@ -29,7 +29,7 @@ export default function Login() {
                 validateStatus: (status) => status < 500, // handle error manual
             }
         )
-            .then((res) => {
+            .then(async (res) => {
                 // console.log("response dari API:", res);
 
                 if (res.status === 404) {
@@ -39,17 +39,29 @@ export default function Login() {
                 } else {
                     // console.log("Login Berhasil, Token: ", res.data.data);
                     const token = res.data.data;
+                    console.log("token:", token);
+
+                    const userRes = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/id/${username}`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    const userId = userRes.data.data;
+                    console.log("User IIIIIIIIIIIIIIIIIIIIIIIIIID:", userId);
 
                     if (!token) {
                         setError("No token received. Please check the API response.");
                         return;
                     }
 
-                    // nyimpen token ke localStorage
+                    // nyimpen ke localStorage
                     localStorage.setItem("token", token);
+                    localStorage.setItem("userId", userId);
+                    localStorage.setItem("username", username);
 
                     // nyimpen user session ke state global pake jotai
-                    setAuth({ user: { username }, token });
+                    setAuth((prev) => ({
+                        user: { id: userId, username },
+                        token: token, // Simpan token
+                    }));
 
                     // nampilin pesan sukses selama 1 detik sebelum redirect
                     setSuccessMessage("Login Berhasil! Redirecting...");
@@ -63,6 +75,8 @@ export default function Login() {
                 setError("An unexpected error occurred. Please try again.");
             });
     };
+
+
 
     return (
         <AuthLayout>
