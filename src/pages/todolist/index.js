@@ -50,7 +50,17 @@ export default function Todolist() {
 
     return (
         <MainLayout>
-            <h1 className="text-2xl font-bold text-gray-900">Todolist</h1>
+            <div className="flex justify-between items-center mb-4">
+                <h1 className="text-2xl font-bold text-gray-900">Todolist</h1>
+                {/* 🔥 Tombol Add Todo */}
+                <button
+                    onClick={() => router.push("/todolist/add")}
+                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                >
+                    + Add Todo
+                </button>
+            </div>
+
 
             <input
                 type="text"
