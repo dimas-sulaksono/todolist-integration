@@ -16,8 +16,10 @@ export default function Login() {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        setError(""); // direset setiap submit
-        setSuccessMessage(""); // direset setiap submit
+
+        // direset setiap submit
+        setError("");
+        setSuccessMessage("");
 
         axios.post(
             `${process.env.NEXT_PUBLIC_API_URL}/user/login`,
@@ -30,22 +32,19 @@ export default function Login() {
             }
         )
             .then(async (res) => {
-                // console.log("response dari API:", res);
-
                 if (res.status === 404) {
                     setError("User is not registered.");
                 } else if (res.status === 401) {
                     setError("Invalid username or password.");
                 } else {
-                    // console.log("Login Berhasil, Token: ", res.data.data);
                     const token = res.data.data;
-                    console.log("token:", token);
+                    // console.log("token:", token);
 
                     const userRes = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/id/${username}`, {
                         headers: { Authorization: `Bearer ${token}` }
                     });
                     const userId = userRes.data.data;
-                    console.log("User IIIIIIIIIIIIIIIIIIIIIIIIIID:", userId);
+                    // console.log("User ID:", userId);
 
                     if (!token) {
                         setError("No token received. Please check the API response.");
@@ -60,7 +59,7 @@ export default function Login() {
                     // nyimpen user session ke state global pake jotai
                     setAuth((prev) => ({
                         user: { id: userId, username },
-                        token: token, // Simpan token
+                        token: token,
                     }));
 
                     // nampilin pesan sukses selama 1 detik sebelum redirect
@@ -71,7 +70,6 @@ export default function Login() {
                 }
             })
             .catch((err) => {
-                // console.error("Login Error:", err);
                 setError("An unexpected error occurred. Please try again.");
             });
     };

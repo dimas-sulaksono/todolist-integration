@@ -71,9 +71,22 @@ export default function AddTodolist() {
         }
     };
 
+    const handleBack = () => {
+        router.back();
+    };
+
+
     return (
         <MainLayout>
-            <h1 className="text-2xl font-bold text-gray-900">Tambah Todolist</h1>
+            <div className="flex justify-between items-center mb-4">
+                <h1 className="text-2xl font-bold text-gray-900">Tambah Todolist</h1>
+                <button
+                    onClick={handleBack}
+                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                >
+                    Back
+                </button>
+            </div>
 
             {successMessage && <div className="p-3 mb-4 text-green-700 bg-green-200">{successMessage}</div>}
             {error && <div className="p-3 mb-4 text-red-700 bg-red-200">{error}</div>}
@@ -88,10 +101,11 @@ export default function AddTodolist() {
                     required
                 />
                 <textarea
-                    placeholder="Deskripsi (Opsional)"
+                    placeholder="Deskripsi"
                     className="w-full p-2 border rounded text-gray-700"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
+                    required
                 />
                 <select
                     className="w-full p-2 border rounded text-gray-700"
@@ -107,12 +121,12 @@ export default function AddTodolist() {
                     ))}
                 </select>
 
-                <input
+                {/* <input
                     type="file"
                     accept="image/*"
                     className="w-full p-2 border rounded"
                     onChange={handleFileChange}
-                />
+                /> */}
 
                 <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
                     Tambah Todolist

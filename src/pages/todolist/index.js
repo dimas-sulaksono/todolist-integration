@@ -5,37 +5,37 @@ import { authAtom } from "@/store/authAtom";
 import useAuthRedirect from "@/middleware/authMiddleware";
 import MainLayout from "@/components/templates/MainLayout";
 import { useRouter } from "next/router";
-import { debounce } from "lodash"; // 🔥 lodash buat cegah repeat request
+import { debounce } from "lodash";
+import CardTodolist from "@/components/molecules/CardTodolist";
 
 export default function Todolist() {
     useAuthRedirect();
     const router = useRouter();
     const [auth] = useAtom(authAtom);
     const [tasks, setTasks] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState("");
     const [error, setError] = useState("");
-    const [searchQuery, setSearchQuery] = useState(router.query.search || ""); // state search
+    const [searchQuery, setSearchQuery] = useState(router.query.search || "");
 
     useEffect(() => {
         if (!auth.user?.id) return;
-        const userId = auth.user.id;
+        fetchCategories();
+        fetchTodolist(auth.user.id, searchQuery, selectedCategory);
+    }, [auth.user, searchQuery, selectedCategory]);
 
-        //  debounce untuk menghindari terlalu banyak request saat mengetik
-        const debouncedSearch = debounce(() => {
-            fetchTodolist(userId, searchQuery);
-        }, 500); // delay 500ms sebelum request
-
-        debouncedSearch(); // jalanin search setelah delay
-        return () => debouncedSearch.cancel(); // cleanup biar ngga memory leak
-    }, [auth.user, searchQuery]); // jalanin ulang setiap kali user atau searchQuery berubah
-
-    const fetchTodolist = async (userId, search) => {
+    const fetchTodolist = async (userId, search, categoryId) => {
         try {
             let endpoint = `/todolist/user/${userId}`;
             if (search) {
                 endpoint = `/todolist/user/${userId}/search?title=${encodeURIComponent(search)}`;
+            } else if (categoryId) {
+                endpoint = `/todolist/filter?userId=${userId}&categoryId=${categoryId}`;
             }
 
-            const res = await API.get(endpoint);
+            const res = await API.get(endpoint, {
+                headers: { Authorization: `Bearer ${auth.token}` },
+            });
 
             if (Array.isArray(res.data.data)) {
                 setTasks(res.data.data);
@@ -48,11 +48,21 @@ export default function Todolist() {
         }
     };
 
+    const fetchCategories = async () => {
+        try {
+            const res = await API.get("/todolist/category", {
+                headers: { Authorization: `Bearer ${auth.token}` },
+            });
+            setCategories(res.data.data);
+        } catch (err) {
+            setError("Gagal mengambil kategori.");
+        }
+    };
+
     return (
         <MainLayout>
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-2xl font-bold text-gray-900">Todolist</h1>
-                {/* 🔥 Tombol Add Todo */}
                 <button
                     onClick={() => router.push("/todolist/add")}
                     className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
@@ -61,28 +71,39 @@ export default function Todolist() {
                 </button>
             </div>
 
+            {/* 🔥 Input Pencarian & Dropdown Kategori */}
+            <div className="flex gap-4 mb-4">
+                <input
+                    type="text"
+                    placeholder="Cari todolist..."
+                    className="w-full p-2 border rounded text-gray-700 placeholder-gray-500"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                />
 
-            <input
-                type="text"
-                placeholder="Cari todolist..."
-                className="w-full p-2 border rounded text-gray-700 placeholder-gray-500 mb-4"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)} // 🔥 Mencari otomatis saat mengetik
-            />
+                <select
+                    className="p-2 border rounded text-gray-700"
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                >
+                    <option value="">Semua Kategori</option>
+                    {categories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                            {category.name}
+                        </option>
+                    ))}
+                </select>
+            </div>
 
             {error && <p className="text-red-500">{error}</p>}
 
-            <ul>
+            <div className="space-y-2">
                 {tasks.length > 0 ? (
-                    tasks.map((task) => (
-                        <li key={task.id} className="p-2 border-b text-gray-800">
-                            <strong>{task.title}</strong> - {task.category?.name || "Tanpa Kategori"}
-                        </li>
-                    ))
+                    tasks.map((task) => <CardTodolist key={task.id} task={task} />)
                 ) : (
-                    <p className="text-gray-700">Tidak ada todo ditemukan.</p>
+                    <p className="text-gray-400">Tidak ada todo ditemukan.</p>
                 )}
-            </ul>
+            </div>
         </MainLayout>
     );
 }

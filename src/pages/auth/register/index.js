@@ -14,8 +14,8 @@ export default function Register() {
 
     const handleRegister = async (e) => {
         e.preventDefault();
-        setError(""); // direset setiap submit
-        setSuccessMessage(""); // direset setiap submit
+        setError("");
+        setSuccessMessage("");
 
         if (password.length < 8) {
             setError("Password must be at least 8 characters long");
@@ -30,7 +30,7 @@ export default function Register() {
                 password,
             },
             {
-                validateStatus: (status) => status < 500, // handle manual
+                validateStatus: (status) => status < 500,
             }
         )
             .then((res) => {
@@ -39,7 +39,6 @@ export default function Register() {
                 } else if (res.status === 400) {
                     setError(res.data.data || "Invalid request.");
                 } else {
-                    // console.log("Registration success:", res.data);
                     setSuccessMessage("Registration successful! Redirecting to login...");
 
                     // redirect ke login 3 detik
@@ -49,7 +48,6 @@ export default function Register() {
                 }
             })
             .catch((err) => {
-                // console.error("coba tangkap error:", err);
                 setError("An unexpected error occurred. Please try again.");
             });
     };
