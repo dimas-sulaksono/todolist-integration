@@ -5,6 +5,7 @@ import { authAtom } from "@/store/authAtom";
 import useAuthRedirect from "@/middleware/authMiddleware";
 import MainLayout from "@/components/templates/MainLayout";
 import { useRouter } from "next/router";
+import { debounce } from "lodash"; // 🔥 lodash buat cegah repeat request
 
 export default function Todolist() {
     useAuthRedirect();
@@ -15,16 +16,23 @@ export default function Todolist() {
     const [searchQuery, setSearchQuery] = useState(router.query.search || ""); // state search
 
     useEffect(() => {
-        if (!auth.user?.id) { return; }
+        if (!auth.user?.id) return;
         const userId = auth.user.id;
-        fetchTodolist(userId, searchQuery);
-    }, [auth.user, router.query.search]); //  re-fetch data saat user berubah atau query berubah
+
+        //  debounce untuk menghindari terlalu banyak request saat mengetik
+        const debouncedSearch = debounce(() => {
+            fetchTodolist(userId, searchQuery);
+        }, 500); // delay 500ms sebelum request
+
+        debouncedSearch(); // jalanin search setelah delay
+        return () => debouncedSearch.cancel(); // cleanup biar ngga memory leak
+    }, [auth.user, searchQuery]); // jalanin ulang setiap kali user atau searchQuery berubah
 
     const fetchTodolist = async (userId, search) => {
         try {
             let endpoint = `/todolist/user/${userId}`;
             if (search) {
-                endpoint += `/search?title=${encodeURIComponent(search)}`;
+                endpoint = `/todolist/user/${userId}/search?title=${encodeURIComponent(search)}`;
             }
 
             const res = await API.get(endpoint);
@@ -40,31 +48,17 @@ export default function Todolist() {
         }
     };
 
-    const handleSearch = (e) => {
-        e.preventDefault();
-        if (searchQuery.trim()) {
-            router.push(`/todolist?search=${encodeURIComponent(searchQuery)}`);
-        } else {
-            router.push("/todolist");
-        }
-    };
-
     return (
         <MainLayout>
             <h1 className="text-2xl font-bold text-gray-900">Todolist</h1>
 
-            <form onSubmit={handleSearch} className="mb-4 flex gap-2">
-                <input
-                    type="text"
-                    placeholder="Cari todolist..."
-                    className="w-full p-2 border rounded text-gray-700 placeholder-gray-500"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                <button type="submit" className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition">
-                    Cari
-                </button>
-            </form>
+            <input
+                type="text"
+                placeholder="Cari todolist..."
+                className="w-full p-2 border rounded text-gray-700 placeholder-gray-500 mb-4"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)} // 🔥 Mencari otomatis saat mengetik
+            />
 
             {error && <p className="text-red-500">{error}</p>}
 
