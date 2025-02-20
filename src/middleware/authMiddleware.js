@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { authAtom } from "../store/authAtom";
+import { authAtom } from "@/store/authAtom";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 

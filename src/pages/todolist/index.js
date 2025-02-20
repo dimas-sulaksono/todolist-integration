@@ -18,11 +18,11 @@ export default function Todolist() {
         }
 
         const userId = auth.user.id;
-        console.log("Fetching todolist for user ID:", userId); // Debugging
+        //console.log("Fetching todolist for user ID:", userId);
 
         API.get(`/todolist/user/${userId}`)
             .then((res) => {
-                console.log("API Response:", res.data); // Debugging response API
+                //console.log("API Response:", res.data);
 
                 if (Array.isArray(res.data.data)) {
                     setTasks(res.data.data);

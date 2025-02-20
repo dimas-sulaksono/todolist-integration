@@ -1,4 +1,3 @@
-// components/templates/AuthLayout.js
 import React from "react";
 
 const AuthLayout = ({ children }) => {

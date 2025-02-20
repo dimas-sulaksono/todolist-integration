@@ -10,12 +10,12 @@ export default function Register() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const [successMessage, setSuccessMessage] = useState(""); // ✅ State untuk notifikasi sukses
+    const [successMessage, setSuccessMessage] = useState(""); // buat notifikasi sukses
 
     const handleRegister = async (e) => {
         e.preventDefault();
-        setError(""); // Reset error setiap kali submit
-        setSuccessMessage(""); // Reset success message setiap kali submit
+        setError(""); // direset setiap submit
+        setSuccessMessage(""); // direset setiap submit
 
         if (password.length < 8) {
             setError("Password must be at least 8 characters long");
@@ -30,7 +30,7 @@ export default function Register() {
                 password,
             },
             {
-                validateStatus: (status) => status < 500, // ✅ Tangani error tanpa membuat Unhandled Runtime Error
+                validateStatus: (status) => status < 500, // handle manual
             }
         )
             .then((res) => {
@@ -39,17 +39,17 @@ export default function Register() {
                 } else if (res.status === 400) {
                     setError(res.data.data || "Invalid request.");
                 } else {
-                    console.log("Registration success:", res.data);
+                    // console.log("Registration success:", res.data);
                     setSuccessMessage("Registration successful! Redirecting to login...");
 
-                    // 🔥 Redirect ke login setelah 3 detik
+                    // redirect ke login 3 detik
                     setTimeout(() => {
                         router.push("/auth/login");
                     }, 3000);
                 }
             })
             .catch((err) => {
-                console.error("🔥 ERROR DITANGKAP:", err);
+                // console.error("coba tangkap error:", err);
                 setError("An unexpected error occurred. Please try again.");
             });
     };
@@ -59,14 +59,14 @@ export default function Register() {
         <AuthLayout>
             <h2 className="text-2xl font-bold text-center text-gray-800">Register</h2>
 
-            {/* ✅ Tampilkan Notifikasi Sukses */}
+            {/* nampilin notif sukses */}
             {successMessage && (
                 <div className="p-3 mb-4 text-green-700 bg-green-200 border border-green-400 rounded">
                     {successMessage}
                 </div>
             )}
 
-            {/* ✅ Tampilkan Error Jika Ada */}
+            {/* nampilin error, kalau ada */}
             {error && (
                 <div className="p-3 mb-4 text-red-700 bg-red-200 border border-red-400 rounded">
                     {error}
