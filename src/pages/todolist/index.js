@@ -4,48 +4,75 @@ import API from "@/services/api";
 import { authAtom } from "@/store/authAtom";
 import useAuthRedirect from "@/middleware/authMiddleware";
 import MainLayout from "@/components/templates/MainLayout";
+import { useRouter } from "next/router";
 
 export default function Todolist() {
     useAuthRedirect();
+    const router = useRouter();
     const [auth] = useAtom(authAtom);
     const [tasks, setTasks] = useState([]);
     const [error, setError] = useState("");
+    const [searchQuery, setSearchQuery] = useState(router.query.search || ""); // state search
 
     useEffect(() => {
-        if (!auth.user?.id) {
-            console.log("User ID tidak ditemukan!");
-            return;
-        }
-
+        if (!auth.user?.id) { return; }
         const userId = auth.user.id;
-        //console.log("Fetching todolist for user ID:", userId);
+        fetchTodolist(userId, searchQuery);
+    }, [auth.user, router.query.search]); //  re-fetch data saat user berubah atau query berubah
 
-        API.get(`/todolist/user/${userId}`)
-            .then((res) => {
-                //console.log("API Response:", res.data);
+    const fetchTodolist = async (userId, search) => {
+        try {
+            let endpoint = `/todolist/user/${userId}`;
+            if (search) {
+                endpoint += `/search?title=${encodeURIComponent(search)}`;
+            }
 
-                if (Array.isArray(res.data.data)) {
-                    setTasks(res.data.data);
-                } else {
-                    setError("Data tidak berbentuk array");
-                    setTasks([]);
-                }
-            })
-            .catch((err) => {
-                console.error("Error fetching todolist:", err);
-                setError("Gagal mengambil data todolist.");
-            });
-    }, [auth.user]);
+            const res = await API.get(endpoint);
+
+            if (Array.isArray(res.data.data)) {
+                setTasks(res.data.data);
+            } else {
+                setError("Data tidak berbentuk array");
+                setTasks([]);
+            }
+        } catch (err) {
+            setError("Gagal mengambil data todolist.");
+        }
+    };
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            router.push(`/todolist?search=${encodeURIComponent(searchQuery)}`);
+        } else {
+            router.push("/todolist");
+        }
+    };
 
     return (
         <MainLayout>
             <h1 className="text-2xl font-bold text-gray-900">Todolist</h1>
+
+            <form onSubmit={handleSearch} className="mb-4 flex gap-2">
+                <input
+                    type="text"
+                    placeholder="Cari todolist..."
+                    className="w-full p-2 border rounded text-gray-700 placeholder-gray-500"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <button type="submit" className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition">
+                    Cari
+                </button>
+            </form>
+
             {error && <p className="text-red-500">{error}</p>}
+
             <ul>
                 {tasks.length > 0 ? (
                     tasks.map((task) => (
                         <li key={task.id} className="p-2 border-b text-gray-800">
-                            <strong>{task.title}</strong> - {task.category.name}
+                            <strong>{task.title}</strong> - {task.category?.name || "Tanpa Kategori"}
                         </li>
                     ))
                 ) : (
