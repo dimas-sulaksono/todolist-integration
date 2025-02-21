@@ -140,12 +140,17 @@ export default function TodolistDetailByTitle() {
         }
     };
 
-    const handleDeleteTodolist = async () => {
+    const handleSoftDeleteTodolist = async (id) => {
         try {
-            await API.delete(`/todolist/${task.id}`, {
+            await API.put(`/todolist/softdel/${id}`, {}, {
                 headers: { Authorization: `Bearer ${auth.token}` },
             });
-            router.push("/todolist");
+
+            setSuccessMessage("Todolist berhasil dipindahkan ke trash!");
+            setTimeout(() => {
+                router.push("/todolist");
+            }, 1000);
+
         } catch (err) {
             setError("Gagal menghapus todolist.");
         }
@@ -223,6 +228,11 @@ export default function TodolistDetailByTitle() {
                 </form>
             ) : (
                 <div className="p-6 bg-white text-gray-800 rounded-lg shadow-lg">
+                    {successMessage && (
+                        <div className="p-3 mb-4 text-green-700 bg-green-200 border border-green-400 rounded">
+                            {successMessage}
+                        </div>
+                    )}
                     <h1 className="text-2xl font-bold">{task.title}</h1>
                     <p className="text-gray-700">{task.description || "Tidak ada deskripsi"}</p>
                     <p className="text-sm text-gray-600 mt-2">Kategori: {task.category?.name || "Tanpa Kategori"}</p>
@@ -235,10 +245,10 @@ export default function TodolistDetailByTitle() {
                             Edit
                         </button>
                         <button
-                            onClick={handleDeleteTodolist}
+                            onClick={() => handleSoftDeleteTodolist(task.id)}
                             className="bg-red-500 px-4 py-2 text-white rounded-md hover:bg-red-600 transition"
                         >
-                            Hapus Todolist
+                            Hapus
                         </button>
                     </div>
                 </div>
