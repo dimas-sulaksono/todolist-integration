@@ -66,7 +66,7 @@ export default function Login() {
                     setSuccessMessage("Login Berhasil! Redirecting...");
                     setTimeout(() => {
                         router.push("/todolist");
-                    }, 1000);
+                    }, 500);
                 }
             })
             .catch((err) => {

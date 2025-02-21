@@ -82,7 +82,7 @@ export default function AddTodolist() {
                 <h1 className="text-2xl font-bold text-gray-900">Tambah Todolist</h1>
                 <button
                     onClick={handleBack}
-                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                    className="bg-blue-500 min-w-32 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
                 >
                     Back
                 </button>

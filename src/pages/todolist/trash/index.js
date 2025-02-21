@@ -78,7 +78,7 @@ export default function TrashPage() {
                 <h1 className="text-2xl font-bold text-gray-900">Trash</h1>
                 <button
                     onClick={handleBack}
-                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                    className="bg-blue-500 min-w-32 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
                 >
                     Back
                 </button>
@@ -95,21 +95,24 @@ export default function TrashPage() {
                 {deletedTasks.length > 0 ? (
                     deletedTasks.map((task) => (
                         <li key={task.id}>
-                            <div className="p-6 bg-white text-gray-800 rounded-lg shadow-lg">
-                                <h1 className="text-2xl font-bold">{task.title}</h1>
-                                <p className="text-gray-700">{task.description || "Tidak ada deskripsi"}</p>
-                                <p className="text-sm text-gray-600 mt-2">Kategori: {task.category?.name || "Tanpa Kategori"}</p>
+                            <div className="p-6 bg-white text-gray-800 rounded-lg shadow-lg flex justify-between items-center">
+                                <div>
+                                    <h1 className="text-2xl font-bold">{task.title}</h1>
+                                    <p className="text-gray-700">{task.description || "Tidak ada deskripsi"}</p>
+                                    <p className="text-sm text-gray-600 mt-2">Kategori: {task.category?.name || "Tanpa Kategori"}</p>
+                                </div>
 
-                                <div className="flex gap-3 mt-4">
-                                    <button
+                                {/* Posisi tombol diperbaiki (vertikal dan sejajar di sisi kanan) */}
+                                <div className="flex flex-col items-end gap-2">
+                                    {/* <button
                                         onClick={() => handleRestoreTodolist(task.id)}
-                                        className="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-600"
+                                        className="bg-green-500 min-w-40 text-white px-4 py-2 rounded-md hover:bg-green-600"
                                     >
                                         Pulihkan
-                                    </button>
+                                    </button> */}
                                     <button
                                         onClick={() => handleHardDeleteTodolist(task.id)}
-                                        className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600"
+                                        className="bg-red-500 text-white min-w-40 px-4 py-2 rounded-md hover:bg-red-600"
                                     >
                                         Hapus Permanen
                                     </button>

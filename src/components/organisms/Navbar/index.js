@@ -13,7 +13,7 @@ export default function Navbar() {
             {auth.token && (
                 <button
                     onClick={() => logout(setAuth, router)}
-                    className="bg-red-500 text-white px-4 py-2 rounded"
+                    className="bg-red-500 min-w-32 text-white mr-2 px-4 py-2 rounded"
                 >
                     Logout
                 </button>
