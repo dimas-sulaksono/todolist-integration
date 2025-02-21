@@ -5,7 +5,6 @@ import { authAtom } from "@/store/authAtom";
 import useAuthRedirect from "@/middleware/authMiddleware";
 import MainLayout from "@/components/templates/MainLayout";
 import { useRouter } from "next/router";
-import { debounce } from "lodash";
 import CardTodolist from "@/components/molecules/CardTodolist";
 
 export default function Todolist() {
@@ -68,11 +67,10 @@ export default function Todolist() {
                     onClick={() => router.push("/todolist/add")}
                     className="bg-blue-500 min-w-32 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
                 >
-                    + Add Todo
+                    Tambah Data
                 </button>
             </div>
 
-            {/* 🔥 Input Pencarian & Dropdown Kategori */}
             <div className="flex gap-4 mb-4">
                 <input
                     type="text"

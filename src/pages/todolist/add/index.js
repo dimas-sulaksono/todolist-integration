@@ -84,7 +84,7 @@ export default function AddTodolist() {
                     onClick={handleBack}
                     className="bg-blue-500 min-w-32 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
                 >
-                    Back
+                    Kembali
                 </button>
             </div>
 
