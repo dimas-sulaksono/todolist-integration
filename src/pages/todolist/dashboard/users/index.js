@@ -4,6 +4,7 @@ import { authAtom } from "@/store/authAtom";
 import API from "@/services/api";
 import MainLayout from "@/components/templates/MainLayout";
 import { useRouter } from "next/router";
+import PageHeader from "@/components/molecules/PageHeader";
 
 export default function UsersDashboard() {
     const [auth] = useAtom(authAtom);
@@ -148,22 +149,10 @@ export default function UsersDashboard() {
         }
     };
 
-    const handleBack = () => {
-        router.back();
-    };
-
     return (
         <MainLayout>
             <div className="p-6 bg-white rounded-lg shadow-lg">
-                <div className="flex justify-between items-center mb-4">
-                    <h1 className="text-2xl font-bold text-gray-900">Dashboard - Users</h1>
-                    <button
-                        onClick={handleBack}
-                        className="bg-blue-500 min-w-32 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-                    >
-                        Kembali
-                    </button>
-                </div>
+                <PageHeader title="Dashboard - Users" />
 
                 {successMessage && (
                     <p className="p-3 mb-4 text-green-700 bg-green-200 border border-green-400 rounded">
@@ -216,7 +205,8 @@ export default function UsersDashboard() {
                                                         : "bg-green-500 hover:bg-green-600"
                                                         }`}
                                                 >
-                                                    Jadikan {user.role === "ADMIN" ? "User" : "Admin"}
+                                                    Ganti Role
+                                                    {/* Jadikan {user.role === "ADMIN" ? "User" : "Admin"} */}
                                                 </button>
                                                 <button
                                                     onClick={() => handleEditUser(user)}

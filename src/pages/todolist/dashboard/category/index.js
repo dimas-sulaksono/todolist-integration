@@ -4,6 +4,7 @@ import API from "@/services/api";
 import { authAtom } from "@/store/authAtom";
 import MainLayout from "@/components/templates/MainLayout";
 import { useRouter } from "next/router";
+import PageHeader from "@/components/molecules/PageHeader";
 
 export default function CategoryDashboard() {
     const [auth] = useAtom(authAtom);
@@ -92,22 +93,10 @@ export default function CategoryDashboard() {
         }
     };
 
-    const handleBack = () => {
-        router.back();
-    };
-
     return (
         <MainLayout>
             <div className="p-6 bg-white rounded-lg shadow-lg">
-                <div className="flex justify-between items-center mb-4">
-                    <h1 className="text-2xl font-bold text-gray-900">Dashboard - Kategori</h1>
-                    <button
-                        onClick={handleBack}
-                        className="bg-blue-500 min-w-32 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-                    >
-                        Kembali
-                    </button>
-                </div>
+                <PageHeader title="Dashboard - Kategori" />
 
                 {successMessage && <p className="p-3 text-green-700 bg-green-200 border border-green-400 rounded">{successMessage}</p>}
                 {error && <p className="p-3 text-red-700 bg-red-200 border border-red-400 rounded">{error}</p>}

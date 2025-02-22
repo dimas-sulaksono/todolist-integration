@@ -5,6 +5,7 @@ import API from "@/services/api";
 import MainLayout from "@/components/templates/MainLayout";
 import { useRouter } from "next/router";
 import useAuthRedirect from "@/middleware/authMiddleware";
+import PageHeader from "@/components/molecules/PageHeader";
 
 export default function AddTodolist() {
     useAuthRedirect();
@@ -71,22 +72,9 @@ export default function AddTodolist() {
         }
     };
 
-    const handleBack = () => {
-        router.back();
-    };
-
-
     return (
         <MainLayout>
-            <div className="flex justify-between items-center mb-4">
-                <h1 className="text-2xl font-bold text-gray-900">Tambah Todolist</h1>
-                <button
-                    onClick={handleBack}
-                    className="bg-blue-500 min-w-32 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-                >
-                    Kembali
-                </button>
-            </div>
+            <PageHeader title="Tambah Todolist" />
 
             {successMessage && <div className="p-3 mb-4 text-green-700 bg-green-200">{successMessage}</div>}
             {error && <div className="p-3 mb-4 text-red-700 bg-red-200">{error}</div>}

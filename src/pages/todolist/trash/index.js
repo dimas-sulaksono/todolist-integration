@@ -4,6 +4,7 @@ import API from "@/services/api";
 import { authAtom } from "@/store/authAtom";
 import useAuthRedirect from "@/middleware/authMiddleware";
 import MainLayout from "@/components/templates/MainLayout";
+import PageHeader from "@/components/molecules/PageHeader";
 
 export default function TrashPage() {
     useAuthRedirect();
@@ -74,15 +75,7 @@ export default function TrashPage() {
 
     return (
         <MainLayout>
-            <div className="flex justify-between items-center mb-4">
-                <h1 className="text-2xl font-bold text-gray-900">Trash</h1>
-                <button
-                    onClick={handleBack}
-                    className="bg-blue-500 min-w-32 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-                >
-                    Back
-                </button>
-            </div>
+            <PageHeader title="Trash" />
 
             {error && <p className="text-red-500">{error}</p>}
             {successMessage && (

@@ -6,7 +6,7 @@ import useAuthRedirect from "@/middleware/authMiddleware";
 import MainLayout from "@/components/templates/MainLayout";
 import { useRouter } from "next/router";
 import CardTodolist from "@/components/molecules/CardTodolist";
-
+import PageHeader from "@/components/molecules/PageHeader";
 
 export default function AllTodolistPage() {
     useAuthRedirect();
@@ -19,8 +19,6 @@ export default function AllTodolistPage() {
     const [error, setError] = useState("");
     const [userRole, setUserRole] = useState(null);
     const [categories, setCategories] = useState([]);
-    const [selectedCategory, setSelectedCategory] = useState("");
-    const [searchQuery, setSearchQuery] = useState(router.query.search || "");
 
 
     useEffect(() => {
@@ -73,21 +71,9 @@ export default function AllTodolistPage() {
         }
     };
 
-    const handleBack = () => {
-        router.back();
-    };
-
     return (
         <MainLayout>
-            <div className="flex justify-between items-center mb-4">
-                <h1 className="text-2xl font-bold text-gray-900">All Todolist</h1>
-                <button
-                    onClick={handleBack}
-                    className="bg-blue-500 min-w-32 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-                >
-                    Kembali
-                </button>
-            </div>
+            <PageHeader title="Dashboard - Todolist" />
 
             {/* <div className="flex gap-4 mb-4">
                 <input

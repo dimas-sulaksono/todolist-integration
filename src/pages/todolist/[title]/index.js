@@ -5,6 +5,7 @@ import { authAtom } from "@/store/authAtom";
 import API from "@/services/api";
 import useAuthRedirect from "@/middleware/authMiddleware";
 import MainLayout from "@/components/templates/MainLayout";
+import PageHeader from "@/components/molecules/PageHeader";
 
 const toTitleCase = (slug) => {
     return slug
@@ -166,15 +167,7 @@ export default function TodolistDetailByTitle() {
 
     return (
         <MainLayout>
-            <div className="flex justify-between items-center mb-4">
-                <h1 className="text-2xl font-bold text-gray-900">{isEditing ? "Edit Todolist" : "Detail Todolist"}</h1>
-                <button
-                    onClick={handleBack}
-                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-                >
-                    Back
-                </button>
-            </div>
+            <PageHeader title={isEditing ? "Edit Todolist" : "Detail Todolist"} />
 
             {isEditing ? (
                 <form onSubmit={handleUpdateTodolist} className="p-6 bg-white text-gray-800 rounded-lg shadow-lg space-y-4">

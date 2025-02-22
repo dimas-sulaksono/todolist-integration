@@ -6,6 +6,7 @@ import useAuthRedirect from "@/middleware/authMiddleware";
 import MainLayout from "@/components/templates/MainLayout";
 import { useRouter } from "next/router";
 import CardTodolist from "@/components/molecules/CardTodolist";
+import PageHeader from "@/components/molecules/PageHeader";
 
 export default function Todolist() {
     useAuthRedirect();
@@ -60,16 +61,7 @@ export default function Todolist() {
 
     return (
         <MainLayout>
-            <div className="flex justify-between items-center mb-4">
-                <h1 className="text-2xl font-bold text-gray-900">Todolist</h1>
-
-                <button
-                    onClick={() => router.push("/todolist/add")}
-                    className="bg-blue-500 min-w-32 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-                >
-                    Tambah Data
-                </button>
-            </div>
+            <PageHeader title="Todolist" buttonText="Tambah Data" buttonAction={() => router.push("/todolist/add")} />
 
             <div className="flex gap-4 mb-4">
                 <input
