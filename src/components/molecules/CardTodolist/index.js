@@ -5,6 +5,7 @@ export default function CardTodolist({ task }) {
     const router = useRouter();
     const isDashboard = router.pathname.startsWith("/todolist/dashboard");
 
+
     const toSlug = (title) => {
         return title
             .toLowerCase()
@@ -18,7 +19,7 @@ export default function CardTodolist({ task }) {
     return (
         <div
             className="flex justify-between items-center p-4 bg-white text-gray-900 rounded-lg shadow-md hover:bg-gray-200 transition cursor-pointer"
-            onClick={() => router.push(`/todolist/${slug}`)}
+            onClick={isDashboard ? () => " " : () => router.push(`/todolist/${slug}`)}
         >
             <div className="flex items-center gap-3">
                 <input
