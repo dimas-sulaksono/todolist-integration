@@ -52,13 +52,13 @@ export default function Dashboard() {
             <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                 <Link href="/todolist/dashboard/all-todolist" className="block bg-blue-500 text-white p-4 rounded text-center">
-                    Semua Todolist
+                    Todolist
                 </Link>
                 <Link href="/todolist/dashboard/users" className="block bg-green-500 text-white p-4 rounded text-center">
-                    Kelola Pengguna
+                    User
                 </Link>
                 <Link href="/todolist/dashboard/category" className="block bg-yellow-500 text-white p-4 rounded text-center">
-                    Kelola Kategori
+                    Category
                 </Link>
             </div>
         </MainLayout>
